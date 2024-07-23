@@ -12,6 +12,7 @@ import {
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
 import { getL1ToL2GasParams } from "./helpter";
+import { l2Network } from "../custom-network";
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "L1RPC", "L2RPC", "TOKEN_ADDRESS"]);
 
@@ -22,53 +23,14 @@ console.log("Environment Variables Loaded");
  */
 const walletPrivateKey: string = process.env.DEVNET_PRIVKEY as string;
 let l1Provider = new ethers.providers.JsonRpcProvider(process.env.L1RPC);
-// l1Provider = new ethers.providers.JsonRpcProvider("https://arb-sepolia.g.alchemy.com/v2/1kcWqynxqbmReSnettyXbJw6l0YFhmnQ");
 const l2Provider = new ethers.providers.JsonRpcProvider(process.env.L2RPC);
 const l1Wallet = new Wallet(walletPrivateKey, l1Provider);
-// const l2Wallet = new Wallet(walletPrivateKey, l2Provider);
+
 
 const main = async () => {
-  // await arbLog("Deposit token using Arbitrum SDK");
 
-  const l2Network: L2Network = {
-    chainID: 88153591557,
-    confirmPeriodBlocks: 20,
-    ethBridge: {
-      inbox: "0x438d3Fb3B49C4aB9FD01791B5f297A0a415f66C0",
-      bridge: "0x3986D14164B3B6EcADAb9376Efe4E905a2a32d68",
-      outbox: "0x78be110441359d69cffeEa1941259C8A5292D886",
-      rollup: "0x78Caf4A899A3949C6109d17a76fD5A2DB29dA2f5",
-      sequencerInbox: "0xa41c89A543dF14B4d5C06dD1e7B94AEd01542E95",
-    },
-    tokenBridge: {
-      l1CustomGateway: "",
-      l1ERC20Gateway: "0x01E1bE90c617b076978b37aCA9552877a15a7006",
-      l1GatewayRouter: "0xf446986e261E84aB2A55159F3Fba60F7E8AeDdAF",
-      l1MultiCall: "",
-      l1ProxyAdmin: "",
-      l1Weth: "",
-      l1WethGateway: "",
-      l2CustomGateway: "",
-      l2ERC20Gateway: "0xdba116E322fd5bE8072E2BdDBDA096fed501586B",
-      l2GatewayRouter: "0xbFE42eF8429c5d5452E23b09910e35748eCe72CF",
-      l2Multicall: "",
-      l2ProxyAdmin: "",
-      l2Weth: "",
-      l2WethGateway: "",
-    },
-    partnerChainID: 421614,
-    isArbitrum: true,
-    blockTime: 0.25,
-    partnerChainIDs: [],
-    explorerUrl: "https://arb-blueberry.gelatoscout.com/",
-    isCustom: true,
-    name: "Blueberry",
-    retryableLifetimeSeconds: 7 * 24 * 60 * 60,
-    nitroGenesisBlock: 0,
-    nitroGenesisL1Block: 0,
-    depositTimeout: 900000,
-    nativeToken: "0xf5055e7C5Ea7b941E4ebad2F028Cb29962a3168C",
-  };
+
+
   console.log("L2 Network Reached");
   // register - needed for retryables
    addCustomNetwork({
@@ -77,29 +39,13 @@ const main = async () => {
 
   console.log("Custom Network Added");
 
-  // Add the default local network configuration to the SDK
- // addDefaultLocalNetwork();
-
-  //console.log("Default Local Network Added");
 
   // Set up the Erc20Bridger
-  const l1Erc20Address = "0x30620B64A9099Ef70C9AB5ECDB8a01D6e442Ec36"; 
+  const l1Erc20Address = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"; 
   const tokenAmount = ethers.utils.parseEther("1")
 
   const erc20Bridger = new Erc20Bridger(l2Network);
-  const depositRequest = await erc20Bridger.getDepositRequest({
-    amount: tokenAmount,
-    erc20L1Address: l1Erc20Address,
-    l1Provider: l1Provider,
-    from:l1Wallet.address,
-    l2Provider: l2Provider,
-  }) as any;
- let retryableData = depositRequest.retryableData;
- let l2Gaslimit = retryableData.gasLimit
- let maxFeePerGas = retryableData.maxFeePerGas
-  
-
-
+ 
 
   console.log("Erc20 Bridger Set Up");
 
@@ -157,54 +103,52 @@ const main = async () => {
   const walletAddress = await l1Wallet.address;
 
 
- 
- 
- console.log('XXXXXXXXXXXXXXXXXXX')
 
-
-console.log(depositRequest.retryableData.maxSubmissionCost)
-let data1 = defaultAbiCoder.encode(
-  ['uint256', 'bytes','uint256'],
-  [
-    // maxSubmissionCost
-    +depositRequest. retryableData.maxSubmissionCost.toString(),
-    // callHookData
-    '0x',
-    depositRequest.retryableData.deposit
-  ]
-)
-let  p = defaultAbiCoder.decode(['uint256', 'bytes','uint256'],data1)
-
-let routerABI  = ["function outboundTransferCustomRefund( address _l1Token,address _refundTo,   address _to,   uint256 _amount,    uint256 _maxGas, uint256 _gasPriceBid, bytes calldata _data) external payable returns (bytes memory)"]
-const routerContract = new Contract("0xf446986e261E84aB2A55159F3Fba60F7E8AeDdAF",routerABI,l1Wallet)
 
 //  Approve the token transfer
   console.log("Approving:");
-  // const approveTx = await erc20Bridger.approveToken({
-  //   l1Signer: l1Wallet,
-  //   erc20L1Address: l1Erc20Address,
-  //   amount:tokenAmount
-  // });
-  // const approveRec = await approveTx.wait();
-  // const approveTx2 = await erc20Bridger.approveToken({
-  //   l1Signer: l1Wallet,
-  //   erc20L1Address: "0xf5055e7C5Ea7b941E4ebad2F028Cb29962a3168C",
-  //   amount:tokenAmount
-  // });
-  // const approveRec2 = await approveTx2.wait();
-  // console.log(
-  //   `You successfully allowed the Arbitrum Bridge to spend CGT ${approveRec2.transactionHash}`
-  // );
+  const approveTx = await erc20Bridger.approveToken({
+    l1Signer: l1Wallet,
+    erc20L1Address: l1Erc20Address,
+    amount:tokenAmount
+  });
+  const approveRec = await approveTx.wait();
+  const approveTx2 = await erc20Bridger.approveToken({
+    l1Signer: l1Wallet,
+    erc20L1Address: "0xf5055e7C5Ea7b941E4ebad2F028Cb29962a3168C",
+    amount:tokenAmount.mul(2)
+  });
+  const approveRec2 = await approveTx2.wait();
+  console.log(
+    `You successfully allowed the Arbitrum Bridge to spend CGT ${approveRec2.transactionHash}`
+  );
 
 
+  const depositRequest = await erc20Bridger.getDepositRequest({
+    amount: tokenAmount,
+    erc20L1Address: l1Erc20Address,
+    l1Provider: l1Provider,
+    from:l1Wallet.address,
+    l2Provider: l2Provider,
+  }) as any;
+  let retryableData = depositRequest.retryableData;
+  let l2Gaslimit = retryableData.gasLimit
+  let maxFeePerGas = retryableData.maxFeePerGas
+  let maxSubmissionCost = retryableData.maxSubmissionCost
 
-// console.log(gasParams)
-// console.log(data1)
-// console.log(gasParams.maxSubmissionCost)
 
-
-
-  //data1 = "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000002b3ead921a000000000000000000000000000000000000000000000000000000000000000000"
+  let data1 = defaultAbiCoder.encode(
+    ['uint256', 'bytes','uint256'],
+    [
+      +depositRequest. retryableData.maxSubmissionCost.toString(),
+      '0x',
+      depositRequest.retryableData.deposit
+    ]
+  )
+  
+  let routerABI  = ["function outboundTransferCustomRefund( address _l1Token,address _refundTo,   address _to,   uint256 _amount,    uint256 _maxGas, uint256 _gasPriceBid, bytes calldata _data) external payable returns (bytes memory)"]
+  const routerContract = new Contract("0xf446986e261E84aB2A55159F3Fba60F7E8AeDdAF",routerABI,l1Wallet)
+  
 
   //Deposit the token to L2
   console.log("Transferring DappToken to L2:");
@@ -215,10 +159,7 @@ const routerContract = new Contract("0xf446986e261E84aB2A55159F3Fba60F7E8AeDdAF"
  
 const depositTx = await l1Wallet.sendTransaction({
   to:routerContract.address,
-  data,
-  gasLimit:6000000,
-  maxFeePerGas:500000000000,
-  maxPriorityFeePerGas:50000000000000
+  data
 })
 
   let rec = await depositTx.wait();

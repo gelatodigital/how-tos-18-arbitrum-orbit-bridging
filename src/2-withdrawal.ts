@@ -23,7 +23,6 @@ const l1Provider = new providers.JsonRpcProvider(process.env.L1RPC);
 const l2Provider = new providers.JsonRpcProvider(process.env.L2RPC);
 const l1Wallet = new Wallet(walletPrivateKey, l1Provider);
 const l2Wallet = new Wallet(walletPrivateKey, l2Provider);
-// const l2Wallet = new Wallet(walletPrivateKey, l2Provider);
 
 const main = async () => {
   // await arbLog("Deposit token using Arbitrum SDK");
@@ -33,7 +32,8 @@ const main = async () => {
   });
 
 
-  let txnHash= "0xf13116d18bfec0fb9f44850c652e480b0b97de0a405d5000f9caf2028a7cacc4";
+  let txnHash= "0x7c73bcd8ce223ea3bb20275e6274c8bd1e88079d8a4af016d871cf824036201d" //withdraw eth
+  //txnHash="0xc0372436dcc0e7eb70763f8e5b46cf0dad538a4a4965ddcd924667e32c5362c0"// withdraw USDC
 
   const receipt = await l2Provider.getTransactionReceipt(txnHash)
 
@@ -55,9 +55,7 @@ const main = async () => {
  )
  await l2ToL1Msg.waitUntilReadyToExecute(l2Provider, timeToWaitMs)
  console.log('Outbox entry exists! Trying to execute now')
- const res = await l2ToL1Msg.execute(l2Provider,{  gasLimit:6000000,
-  maxFeePerGas:500000000000,
-  maxPriorityFeePerGas:50000000000000})
+ const res = await l2ToL1Msg.execute(l2Provider)
 
   const rec = await res.wait()
   console.log('Done! Your transaction is executed', rec)

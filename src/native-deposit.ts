@@ -26,22 +26,29 @@ const l1Provider = new providers.JsonRpcProvider(process.env.L1RPC);
 const l2Provider = new providers.JsonRpcProvider(process.env.L2RPC);
 const l1Wallet = new Wallet(walletPrivateKey, l1Provider);
 const l2Wallet = new Wallet(walletPrivateKey, l2Provider);
-// const l2Wallet = new Wallet(walletPrivateKey, l2Provider);
+
+
 
 const main = async () => {
   // await arbLog("Deposit token using Arbitrum SDK");
 
+  let bal1 = await l1Provider
 
+  console.log()
   // register - needed for retryables
   addCustomNetwork({
     customL2Network: l2Network,
   });
 
-  const ethToL2DepositAmount = utils.parseEther("0.01");
+  const ethToL2DepositAmount = utils.parseEther("0.001");
   console.log("Eth deposit amount is:", ethToL2DepositAmount.toString());
 
   // Set up the Erc20Bridger
   const ethBridger = new EthBridger(l2Network);
+  const approveTx = await ethBridger.approveGasToken({
+    l1Signer: l1Wallet
+  });
+  const approveRec = await approveTx.wait();
 
   console.log("Eth Bridger Set Up");
   //   console.log(ethBridger);
@@ -49,7 +56,7 @@ const main = async () => {
   const l2WalletInitialEthBalance = await l2Wallet.getBalance();
   const result = utils.formatEther(l2WalletInitialEthBalance);
 
-  console.log(`your L2 ETH balance is ${result.toString()}`);
+  console.log(`your L1 ETH balance is ${result.toString()}`);
 
   // Optional transaction overrides
   const overrides = {

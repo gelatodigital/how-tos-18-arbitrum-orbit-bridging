@@ -115,6 +115,9 @@ const main = async () => {
     l1Provider,
     RetryablesGasOverrides //if provided, it will override the estimated values. Note that providing "RetryablesGasOverrides" is totally optional.
   )
+
+
+
   console.log(
     `Current retryable base submission price is: ${L1ToL2MessageGasParams.maxSubmissionCost.toString()}`
   )

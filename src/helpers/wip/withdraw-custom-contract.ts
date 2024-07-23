@@ -20,9 +20,7 @@ console.log("Environment Variables Loaded");
  */
 const walletPrivateKey: string = process.env.DEVNET_PRIVKEY as string;
 
-//const l1Provider = new ethers.providers.JsonRpcProvider(process.env.L1RPC);
-const l1Provider = new ethers.providers.JsonRpcProvider("https://arb-sepolia.g.alchemy.com/v2/1kcWqynxqbmReSnettyXbJw6l0YFhmnQ");
-
+const l1Provider = new ethers.providers.JsonRpcProvider(process.env.L1RPC);
 const l2Provider = new ethers.providers.JsonRpcProvider(process.env.L2RPC);
 const l1Wallet = new Wallet(walletPrivateKey, l1Provider);
  const l2Wallet = new Wallet(walletPrivateKey, l2Provider);
@@ -82,7 +80,7 @@ const main = async () => {
   console.log("Erc20 Bridger Set Up");
 
   // We get the address of L1 Gateway for our DappToken
-  const l1Erc20Address = "0x30620B64A9099Ef70C9AB5ECDB8a01D6e442Ec36"; 
+  const l1Erc20Address = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"; 
  
   // Validate that the token address is correctly set
   if (!l1Erc20Address) {

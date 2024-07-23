@@ -4,14 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/eth-deposit.ts",
-    "erc20": "ts-node src/deposit-custom.ts",
-    "werc20": "ts-node src/withdraw-custom.ts",
-    "withdraw:contract": "ts-node src/withdraw-custom-contract.ts",
-    "erc20:gas": "ts-node src/deposit-gas-custom.ts",
-    "build": "tsc",
-    "step:2":"ts-node src/2-withdrawal.ts",
-    "step:1":"ts-node src/1-withdrawal.ts"
+    "native:deposit": "ts-node src/native-deposit.ts",
+    "native:withdraw":"ts-node src/native-withdrawal.ts",
+    "erc20:deposit": "ts-node src/erc20-deposit.ts",
+    "erc20:withdraw": "ts-node src/erc20-withdrawal.ts",
+    "withdraw-execution":"ts-node src/2-withdrawal.ts",
+    "erc20:deposit-contract":"ts-node src/helpers/wip/deposit-gas-custom.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

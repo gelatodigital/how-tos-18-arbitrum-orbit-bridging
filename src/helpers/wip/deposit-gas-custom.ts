@@ -1,4 +1,4 @@
-import { Contract, Wallet, ethers } from "ethers";
+import { BigNumber, Contract, Wallet, ethers } from "ethers";
 import { Provider } from "@ethersproject/abstract-provider";
 import { defaultAbiCoder } from 'ethers/lib/utils'
 import {
@@ -30,7 +30,6 @@ const l1Wallet = new Wallet(walletPrivateKey, l1Provider);
 const main = async () => {
 
 
-
   console.log("L2 Network Reached");
   // register - needed for retryables
    addCustomNetwork({
@@ -42,7 +41,7 @@ const main = async () => {
 
   // Set up the Erc20Bridger
   const l1Erc20Address = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"; 
-  const tokenAmount = ethers.utils.parseEther("1")
+  const tokenAmount = BigNumber.from(1000000)
 
   const erc20Bridger = new Erc20Bridger(l2Network);
  
@@ -110,13 +109,11 @@ const main = async () => {
   const approveTx = await erc20Bridger.approveToken({
     l1Signer: l1Wallet,
     erc20L1Address: l1Erc20Address,
-    amount:tokenAmount
   });
   const approveRec = await approveTx.wait();
   const approveTx2 = await erc20Bridger.approveToken({
     l1Signer: l1Wallet,
     erc20L1Address: "0xf5055e7C5Ea7b941E4ebad2F028Cb29962a3168C",
-    amount:tokenAmount.mul(2)
   });
   const approveRec2 = await approveTx2.wait();
   console.log(

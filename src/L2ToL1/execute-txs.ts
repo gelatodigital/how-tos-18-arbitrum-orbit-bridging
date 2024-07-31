@@ -8,7 +8,9 @@ import {
 } from "@arbitrum/sdk";
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
-import { l2Network } from "./helpers/custom-network";
+import { l2Network } from "../helpers/custom-network";
+
+
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "L1RPC", "L2RPC", "TOKEN_ADDRESS"]);
 
@@ -30,10 +32,12 @@ const main = async () => {
   addCustomNetwork({
     customL2Network: l2Network,
   });
+  //Token withdrawal initiated! 🥳 0x9d5934fcc8e81aff01513bb538556628530683da95ce9b56413436b66e429299
+  //Ether withdrawal initiated! 🥳 txHash: 0x430aed51521830ad1d256dc1049498d0eb31f9f4a2d49a94d0e7882fac558ee3
+  //Tx initiated! 🥳 txHash: 0x2a849f6f107f78e5a6fe30724eabba1e71a008bd76fca6db96684f15d356fb46
+  // 0x8f00de58994c7feb8354b98b1e2c17c184ea46185be96aa73b42462bf394f56b tx
+  let txnHash= "0x2a849f6f107f78e5a6fe30724eabba1e71a008bd76fca6db96684f15d356fb46" 
 
-
-  let txnHash= "0x7c73bcd8ce223ea3bb20275e6274c8bd1e88079d8a4af016d871cf824036201d" //withdraw eth
-  //txnHash="0xc0372436dcc0e7eb70763f8e5b46cf0dad538a4a4965ddcd924667e32c5362c0"// withdraw USDC
 
   const receipt = await l2Provider.getTransactionReceipt(txnHash)
 
@@ -51,7 +55,7 @@ const main = async () => {
  //console.log(await l2ToL1Msg.status(hre.ethers.provider))
  const timeToWaitMs = 1000 * 60
  console.log(
-   "Waiting for the outbox entry to be created. This only happens when the L2 block is confirmed on L1, ~1 week after it's creation."
+   "Waiting for the outbox entry to be created. This only happens when the L2 block is confirmed on L1, ~1 week after it's creation on Mainnet."
  )
  await l2ToL1Msg.waitUntilReadyToExecute(l2Provider, timeToWaitMs)
  console.log('Outbox entry exists! Trying to execute now')

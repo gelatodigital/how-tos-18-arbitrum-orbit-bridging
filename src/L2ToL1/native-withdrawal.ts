@@ -9,7 +9,8 @@ import {
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
 import { parseEther } from "ethers/lib/utils";
-import { l2Network } from "./helpers/custom-network";
+import { l2Network } from "../helpers/custom-network-reya";
+
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "L1RPC", "L2RPC", "TOKEN_ADDRESS"]);
 
@@ -35,7 +36,6 @@ const main = async () => {
   addCustomNetwork({
     customL2Network: l2Network,
   });
-
 
 
   const ethBridger = new EthBridger(l2Network)

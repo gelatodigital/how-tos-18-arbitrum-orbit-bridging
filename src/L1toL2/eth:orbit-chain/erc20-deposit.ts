@@ -4,13 +4,13 @@ import {
   Erc20Bridger,
   L1ToL2MessageStatus,
   addCustomNetwork,
-  L2Network,
-  addDefaultLocalNetwork,
+  EthBridger,
  
 } from "@arbitrum/sdk";
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
-import { l2Network } from "./helpers/custom-network";
+import { l2Network } from "../helpers/custom-network-reya";
+
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "L1RPC", "L2RPC", "TOKEN_ADDRESS"]);
 
@@ -21,18 +21,14 @@ console.log("Environment Variables Loaded");
  */
 const walletPrivateKey: string = process.env.DEVNET_PRIVKEY as string;
 
-//const l1Provider = new ethers.providers.JsonRpcProvider(process.env.L1RPC);
 const l1Provider = new ethers.providers.JsonRpcProvider(process.env.L1RPC);
 
 const l2Provider = new ethers.providers.JsonRpcProvider(process.env.L2RPC);
 const l1Wallet = new Wallet(walletPrivateKey, l1Provider);
- const l2Wallet = new Wallet(walletPrivateKey, l2Provider);
+// const l2Wallet = new Wallet(walletPrivateKey, l2Provider);
 
 const main = async () => {
-  // await arbLog("Deposit token using Arbitrum SDK");
 
-
-  console.log("L2 Network Reached");
   // register - needed for retryables
    addCustomNetwork({
     customL2Network: l2Network,
@@ -50,7 +46,7 @@ const main = async () => {
 
   console.log("Erc20 Bridger Set Up");
 
-  // We get the address of L1 Gateway for our DappToken
+  // We get the address of L1 Gateway for USDC on Sepolia
   const l1Erc20Address = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; 
 
   // Validate that the token address is correctly set
@@ -73,7 +69,8 @@ const main = async () => {
     l1Wallet
   );
 
-
+  let L1Balance = await erc20Contract.balanceOf(l1Wallet.address)
+  console.log('Current Balance on L1: ', L1Balance.toString())
   // Get the expected L1 Gateway address
   const expectedL1GatewayAddress = await erc20Bridger.getL1GatewayAddress(
     l1Erc20Address,
@@ -97,19 +94,55 @@ const main = async () => {
     `Initial Bridge Token Balance: ${initialBridgeTokenBalance.toString()}`
   );
 
-  //Get the token decimals and compute the deposit amount
-  const tokenAmount = BigNumber.from(400000)
-  console.log('Withdrawing:')
-  const withdrawTx = await erc20Bridger.withdraw({
+
+  const tokenAmount = BigNumber.from(1000000)
+
+  const approveTx = await erc20Bridger.approveToken({
+    l1Signer: l1Wallet,
+    erc20L1Address: l1Erc20Address,
+  });
+  const approveRec = await approveTx.wait();
+
+
+  // console.log(
+  //   `You successfully allowed the Arbitrum Bridge to spend ERC20 ${approveRec.transactionHash}`
+  // );
+
+  // Deposit the token to L2
+  console.log("Transferring DappToken to L2:");
+  const depositTx = await erc20Bridger.deposit({
     amount: tokenAmount,
-    destinationAddress: l2Wallet.address,
-    erc20l1Address: l1Erc20Address,
-    l2Signer: l2Wallet,
-  })
-  const withdrawRec = await withdrawTx.wait()
-  console.log(`Token withdrawal initiated! 🥳 ${withdrawRec.transactionHash}`)
+    erc20L1Address: l1Erc20Address,
+    l1Signer: l1Wallet,
+    l2Provider: l2Provider,
+  });
 
 
+  
+  // Wait for L1 and L2 side of transactions to be confirmed
+  console.log(
+    `Deposit initiated: waiting for L2 retryable (takes 10-15 minutes; current time: ${new Date().toTimeString()}) `
+  );
+  const depositRec = await depositTx.wait();
+  const l2Result = await depositRec.waitForL2(l2Provider);
+
+  // Check if the L1 to L2 message was successful
+  l2Result.complete
+    ? console.log(
+        `L2 message successful: status: ${L1ToL2MessageStatus[l2Result.status]}`
+      )
+    : console.log(
+        `L2 message failed: status ${L1ToL2MessageStatus[l2Result.status]}`
+      );
+
+  // Get the final token balance of the Bridge
+  const finalBridgeTokenBalance = await erc20Contract.balanceOf(
+    expectedL1GatewayAddress
+  );
+
+  console.log(
+    `Final Bridge Token Balance: ${finalBridgeTokenBalance.toString()}`
+  );
 };
 
 main().catch((err) => {

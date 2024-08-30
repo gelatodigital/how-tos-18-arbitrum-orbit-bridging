@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "manual-redeem": "ts-node src/L2ToL1/manual-redeem.ts",
     "native:deposit": "ts-node src/native-deposit.ts",
     "erc20:deposit": "ts-node src/erc20-deposit.ts",
     "erc20:withdraw": "ts-node src/L2ToL1/erc20-withdrawal.ts",

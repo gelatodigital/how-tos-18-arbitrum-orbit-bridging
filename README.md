@@ -1,8 +1,11 @@
-# Arbitrum Orbit Deposit and Withdrawal Scripts
+# How TOs 16: Master Arbitrum Orbit Deposit and Withdrawal 
 
 ## Introduction
 
-This repository contains scripts for performing deposit and withdrawal operations using the Arbitrum SDK. The scripts allow you to deposit ETH from L1 to L2 and withdraw it back to L1, demonstrating the interoperability between Ethereum and Arbitrum networks.
+This repository contains scripts for performing deposit and withdrawal operations using the Arbitrum SDK. The scripts allow you to deposit native tokens as well as erec20 from L1 to L2 and withdraw it back to L1, demonstrating the interoperability between Ethereum and Arbitrum networks.
+
+## Repo Structure
+
 
 ## Setup
 

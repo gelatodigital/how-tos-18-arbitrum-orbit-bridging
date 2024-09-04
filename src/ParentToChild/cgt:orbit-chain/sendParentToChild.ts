@@ -1,14 +1,12 @@
 import { utils, providers, Wallet, BigNumber, Contract } from "ethers";
 import { Provider } from "@ethersproject/abstract-provider";
 import {
-  Erc20Bridger,
   EthBridger,
-  addCustomNetwork,
-  L2Network,
-  L1ToL2MessageGasEstimator
+  registerCustomArbitrumNetwork,
+  ParentToChildMessageGasEstimator
 } from "@arbitrum/sdk";
 import dotenv from "dotenv";
-import { l2Network } from "../../helpers/custom-network";
+import { blueberryNetwork as  childNetwork } from "../../helpers/custom-network";
 import { getBaseFee } from "../../helpers/helpter";
 
 dotenv.config();
@@ -17,14 +15,14 @@ dotenv.config();
 console.log("Environment Variables Loaded");
 
 /**
- * Set up: instantiate L1 / L2 wallets connected to providers
+ * Set up: instantiate Parent / Child wallets connected to providers
  */
 const walletPrivateKey: string = process.env.DEVNET_PRIVKEY as string;
 
-const l1Provider = new providers.JsonRpcProvider(process.env.L1RPC);
-const l2Provider = new providers.JsonRpcProvider(process.env.L2RPC);
-const l1Wallet = new Wallet(walletPrivateKey, l1Provider);
-const l2Wallet = new Wallet(walletPrivateKey, l2Provider);
+const parentProvider = new providers.JsonRpcProvider(process.env.ParentRPC);
+const childProvider = new providers.JsonRpcProvider(process.env.ChildRPC);
+const parentWallet = new Wallet(walletPrivateKey, parentProvider);
+const childWallet = new Wallet(walletPrivateKey, childProvider);
 
 
 const main = async () => {
@@ -32,11 +30,9 @@ const main = async () => {
 
 
   // register - needed for retryables
-  addCustomNetwork({
-    customL2Network: l2Network,
-  });
+  registerCustomArbitrumNetwork(childNetwork);
 
-  const l1ToL2MessageGasEstimate = new L1ToL2MessageGasEstimator(l2Provider);
+  const parentToChildMessageGasEstimate = new ParentToChildMessageGasEstimator(childProvider);
 
   const counter = "0xEEeBe2F778AA186e88dCf2FEb8f8231565769C27";
   const abi = ["function increment()"];
@@ -58,50 +54,49 @@ const main = async () => {
     },
   };
 
-  const L1ToL2MessageGasParams = await l1ToL2MessageGasEstimate.estimateAll(
+  const ParentToChildMessageGasParams = await parentToChildMessageGasEstimate.estimateAll(
     {
-      from: await l1Wallet.address,
+      from: await parentWallet.address,
       to: await counter,
       l2CallValue: BigNumber.from(0),
-      excessFeeRefundAddress: await l2Wallet.address,
-      callValueRefundAddress: await l2Wallet.address,
+      excessFeeRefundAddress: await childWallet.address,
+      callValueRefundAddress: await childWallet.address,
       data: calldata,
     },
-    await getBaseFee(l1Provider),
-    l1Provider,
+    await getBaseFee(parentProvider),
+    parentProvider,
     RetryablesGasOverrides //if provided, it will override the estimated values. Note that providing "RetryablesGasOverrides" is totally optional.
   );
-  const walletAddress = await l1Wallet.address;
+  const walletAddress = await parentWallet.address;
 
-  const ethBridger = new EthBridger(l2Network);
+  const ethBridger = new EthBridger(childNetwork);
   const approveTxGas = await ethBridger.approveGasToken({
-    l1Signer: l1Wallet,
+    parentSigner: parentWallet,
   });
   const approveRecGas = await approveTxGas.wait();
-  const inboxAddress = ethBridger.l2Network.ethBridge.inbox;
+  const inboxAddress = ethBridger.childNetwork.ethBridge.inbox;
 
-  console.log(inboxAddress);
   const inboxAbi = [
-    "function createRetryableTicket(address to,uint256 l2CallValue, uint256 maxSubmissionCost, address excessFeeRefundAddress,address callValueRefundAddress,uint256 gasLimit,uint256 maxFeePerGas,uint256 tokenTotalFeeAmount,bytes calldata data) external payable returns (uint256) ",
+    "function createRetryableTicket(address to,uint256 childCallValue, uint256 maxSubmissionCost, address excessFeeRefundAddress,address callValueRefundAddress,uint256 gasLimit,uint256 maxFeePerGas,uint256 tokenTotalFeeAmount,bytes calldata data) external payable returns (uint256) ",
   ];
 
-  const inboxContract = new Contract(inboxAddress, inboxAbi, l1Wallet);
+  const inboxContract = new Contract(inboxAddress, inboxAbi, parentWallet);
 
 
   let { data } = await inboxContract.populateTransaction.createRetryableTicket(
     counter,
     0,
-    L1ToL2MessageGasParams.maxSubmissionCost,
+    ParentToChildMessageGasParams.maxSubmissionCost,
     walletAddress,
     walletAddress,
-    L1ToL2MessageGasParams.gasLimit,
-    L1ToL2MessageGasParams.maxFeePerGas,
-    L1ToL2MessageGasParams.deposit,
+    ParentToChildMessageGasParams.gasLimit,
+    ParentToChildMessageGasParams.maxFeePerGas,
+    ParentToChildMessageGasParams.deposit,
     calldata
   );
 
 
-  const depositTx = await l1Wallet.sendTransaction({
+  const depositTx = await parentWallet.sendTransaction({
     to: inboxAddress,
     data,
     gasLimit: 8000000,

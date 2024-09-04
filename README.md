@@ -32,11 +32,7 @@ Before running the scripts, ensure you have the necessary dependencies installed
   - `ParentRPC`: Parent RPC URL
   - `ChildRPC`: Child RPC URL
 
-## Scripts
-
 ### Deposit
-
-#### Logic
 
 1. **Initialize Providers and Wallets**:
    - Set up Parent and Child providers using RPC URLs.

@@ -7,7 +7,7 @@ import {
 } from "@arbitrum/sdk";
 
 import dotenv from "dotenv";
-import { novastroNetwork as childNetwork } from "../helpers/custom-network-novastro";
+import {fluenceNetwork as childNetwork} from "../helpers/custom-network-fluence"; 
 
 
 dotenv.config();
@@ -30,7 +30,7 @@ const main = async () => {
   // register - needed for retryables
   registerCustomArbitrumNetwork(childNetwork);
 
-  let txnHash= "0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
+  let txnHash= "0x99334e3f5c081b335ece35c8aac61972afab18c5a6fca2a9f9218cc7b3695192"//"0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
 
 
   const receipt = await childProvider.getTransactionReceipt(txnHash)
@@ -53,6 +53,8 @@ const main = async () => {
  )
  await childToParentMsg.waitUntilReadyToExecute(childProvider, timeToWaitMs)
  console.log('Outbox entry exists! Trying to execute now')
+
+
  const res = await childToParentMsg.execute(childProvider)
 
   const rec = await res.wait()

@@ -12,7 +12,7 @@ import {
 } from "@arbitrum/sdk";
 import dotenv from "dotenv";
 
-import { novastroNetwork as childNetwork } from "../helpers/custom-network-novastro";
+import { blueberryNetwork as childNetwork} from "../helpers/custom-network"; 
 
 dotenv.config();
 

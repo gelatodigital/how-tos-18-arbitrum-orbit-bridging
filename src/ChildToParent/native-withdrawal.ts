@@ -1,7 +1,5 @@
 import { utils, providers, Wallet } from "ethers";
-import { Provider } from "@ethersproject/abstract-provider";
 import {
-  Erc20Bridger,
   EthBridger,
  registerCustomArbitrumNetwork
 } from "@arbitrum/sdk";
@@ -22,7 +20,6 @@ const walletPrivateKey: string = process.env.DEVNET_PRIVKEY as string;
 
 const parentProvider = new providers.JsonRpcProvider(process.env.ParentRPC);
 const childProvider = new providers.JsonRpcProvider(process.env.ChildRPC);
-const parentWallet = new Wallet(walletPrivateKey, parentProvider);
 const childWallet = new Wallet(walletPrivateKey, childProvider);
 
 // const childWallet = new Wallet(walletPrivateKey, childProvider);

@@ -30,7 +30,7 @@ const main = async () => {
   // register - needed for retryables
   registerCustomArbitrumNetwork(childNetwork);
 
-  let txnHash= "0x99334e3f5c081b335ece35c8aac61972afab18c5a6fca2a9f9218cc7b3695192"//"0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
+  let txnHash= "0x7c963210da1d6ece595df863a71f2ea8e057fd01bfd63c42fba122247d2cf0d5"//"0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
 
 
   const receipt = await childProvider.getTransactionReceipt(txnHash)

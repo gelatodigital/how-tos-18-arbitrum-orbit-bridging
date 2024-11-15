@@ -8,7 +8,7 @@ import {
 
 import dotenv from "dotenv";
 
-import { blueberryNetwork as childNetwork} from "../../helpers/custom-network"; 
+import { fluenceTestnetNetwork as childNetwork} from "../../helpers/custom-network-fluence-testnet"; 
 dotenv.config();
 
 
@@ -29,8 +29,8 @@ const main = async () => {
   console.log("Custom Network Added");
 
   // Set up the Erc20Bridger
-  const parentErc20Address = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d";
-  const tokenAmount = BigNumber.from(100000);
+  const parentErc20Address = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238";
+  const tokenAmount = BigNumber.from(1000000);
 
   const erc20Bridger = new Erc20Bridger(childNetwork);
 
@@ -117,6 +117,8 @@ const main = async () => {
   let maxFeePerGas = retryableData.maxFeePerGas;
   let maxSubmissionCost = retryableData.maxSubmissionCost;
   let deposit = depositRequest.retryableData.deposit;
+  console.log("Deposit/gas on l2:  ", deposit.toString())
+
 
   let data1 = defaultAbiCoder.encode(
     ["uint256", "bytes", "uint256"],
@@ -152,7 +154,8 @@ const main = async () => {
   });
 
   let rec = await depositTx.wait();
-  console.log(rec);
+
+  console.log(rec.transactionHash);
 };
 
 main().catch((err) => {

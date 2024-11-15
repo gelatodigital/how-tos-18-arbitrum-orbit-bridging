@@ -51,7 +51,7 @@ const main = async () => {
    */
   const status = await parentToChildMsg.status();
 
-console.log(status)
+
 
   console.log(ParentToChildMessageStatus.FUNDS_DEPOSITED_ON_CHILD)
   console.log(ParentToChildMessageStatus.REDEEMED)

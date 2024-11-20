@@ -10,6 +10,7 @@ export const fluenceTestnetNetwork: ArbitrumNetwork ={
       "rollup": "0xABe31dfC0a5371EAa7D065e70869a25506c09304",
       "sequencerInbox": "0x014E9Ea50d19Dd78463D0BC62BA75985D08Aa1d7"
   },
+
   "tokenBridge": {
       "parentCustomGateway": "",
       "parentErc20Gateway": "0xa6aC19cBD305e98a70cf0F42Ea2d37316dfD7B32",

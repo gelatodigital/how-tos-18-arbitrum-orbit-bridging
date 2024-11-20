@@ -8,7 +8,7 @@ import {
 
 import dotenv from "dotenv";
 
-import { fluenceTestnetNetwork as childNetwork} from "../../helpers/custom-network-fluence-testnet"; 
+import {alephZeroTest as childNetwork} from "../../helpers/custom-network-aleph-test"
 dotenv.config();
 
 
@@ -29,8 +29,8 @@ const main = async () => {
   console.log("Custom Network Added");
 
   // Set up the Erc20Bridger
-  const parentErc20Address = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238";
-  const tokenAmount = BigNumber.from(1000000);
+  const parentErc20Address = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; 
+  const tokenAmount = BigNumber.from(10000);
 
   const erc20Bridger = new Erc20Bridger(childNetwork);
 
@@ -93,16 +93,25 @@ const main = async () => {
     erc20ParentAddress: parentErc20Address,
   });
   const approveRec = await approveTx.wait();
+ 
+  const cgt = new ethers.Contract(
+    childNetwork.nativeToken!,
+    ERC20_ABI,
+    parentWallet
+  );
+
+  let apYx =await cgt.approve("0x6ade2ed963c15c9117ee0d663d4b3af2ded7f660","ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+ await apYx.wait()
 
     /// Native TOKEN
-  const approveTx2 = await erc20Bridger.approveToken({
-    parentSigner: parentWallet,
-    erc20ParentAddress: childNetwork.nativeToken!
-  });
-  const approveRec2 = await approveTx2.wait();
-  console.log(
-    `You successfully allowed the Arbitrum Bridge to spend ${approveRec2.transactionHash}`
-  );
+  // const approveTx2 = await erc20Bridger.approveToken({
+  //   parentSigner: parentWallet,
+  //   erc20ParentAddress: childNetwork.nativeToken!
+  // });
+  // const approveRec2 = await approveTx2.wait();
+  // console.log(
+  //   `You successfully allowed the Arbitrum Bridge to spend ${approveRec2.transactionHash}`
+  // );
 
   const depositRequest = (await erc20Bridger.getDepositRequest({
     amount: tokenAmount,

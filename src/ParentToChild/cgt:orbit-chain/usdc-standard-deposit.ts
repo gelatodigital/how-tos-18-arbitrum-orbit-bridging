@@ -88,7 +88,9 @@ const main = async () => {
     `Initial Bridge Token Balance: ${initialBridgeTokenBalance.toString()}`
   );
 
+
   const tokenAmount = BigNumber.from(50000)
+
 
   const approveTxGas = await erc20Bridger.approveToken({
     parentSigner: parentWallet,
@@ -97,18 +99,19 @@ const main = async () => {
   });
   const approveRecGas = await approveTxGas.wait();
 
+  const cgt = new ethers.Contract(
+    childNetwork.nativeToken!,
+    ERC20_ABI,
+    parentWallet
+  );
 
-  // Native TOKEN
-  const approveTx = await erc20Bridger.approveToken({
-    parentSigner: parentWallet,
-    erc20ParentAddress: childNetwork.nativeToken!
-  });
-  const approveRec = await approveTx.wait();
+  let aleph =await cgt.approve(expectedParentGatewayAddress,ethers.constants.MaxUint256)
+  const approveRec =await aleph.wait()
 
 
-  // console.log(
-  //   `You successfully allowed the Arbitrum Bridge to spend ERC20 ${approveRec.transactionHash}`
-  // );
+  console.log(
+    `You successfully allowed the Arbitrum Bridge to spend ERC20 ${approveRec.transactionHash}`
+  );
 
   // Deposit the token to Child
   console.log("Transferring DappToken to Child:");

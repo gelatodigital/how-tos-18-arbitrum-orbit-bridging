@@ -28,7 +28,7 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
-    "@arbitrum/sdk": "^4.0.1",
+    "@arbitrum/sdk": "4.0.2",
     "@ethersproject/abstract-provider": "^5.7.0",
     "arb-shared-dependencies": "^1.0.0",
     "dotenv": "^16.4.5",

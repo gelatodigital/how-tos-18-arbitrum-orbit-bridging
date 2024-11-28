@@ -78,28 +78,24 @@ const main = async () => {
     parentProvider
   )
 
-
-
   //Get the ERC20 contract instance
   const erc20Contract = new ethers.Contract(
    childUsdc,
     ERC20_ABI,
     childWallet
   );
-  console.log(childUsdc)
-
   // Get the initial token balance of the Bridge
   const initialBridgeTokenBalance = await erc20Contract.balanceOf(
     childWallet.address
   );
-  const tokenAmount = BigNumber.from(1000)
-  // const childGateway = await erc20Bridger.getChildGatewayAddress(
-  //   parentErc20Address,
-  //   childProvider
-  // )
+  const tokenAmount = BigNumber.from(100)
+  const childGateway = await erc20Bridger.getChildGatewayAddress(
+    parentErc20Address,
+    childProvider
+  )
 
-  // let tx = await erc20Contract.approve(childGateway, tokenAmount)
-  // await tx.wait()
+  let tx = await erc20Contract.approve(childGateway, tokenAmount)
+  await tx.wait()
 
 
   // Log the initial balance

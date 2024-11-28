@@ -7,7 +7,7 @@ import {
 } from "@arbitrum/sdk";
 
 import dotenv from "dotenv";
-import {fluenceTestnetNetwork as childNetwork} from "../helpers/custom-network-fluence-testnet"; 
+import {realNetwork as childNetwork} from "../helpers/custom-network-real"; 
 
 
 dotenv.config();
@@ -30,7 +30,7 @@ const main = async () => {
   // register - needed for retryables
   registerCustomArbitrumNetwork(childNetwork);
 
-  let txnHash= "0x0f8cc7933d6943db34427c82a406ee009fe41078daa46aef1c95bda861331308"//"0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
+  let txnHash= "0xb622d914132e09bb89243ff3abfb9a71171dd006f0776d21f8aad69702c6ddf5"//"0x0f8cc7933d6943db34427c82a406ee009fe41078daa46aef1c95bda861331308"//"0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
 
 
   const receipt = await childProvider.getTransactionReceipt(txnHash)
@@ -55,10 +55,10 @@ const main = async () => {
  console.log('Outbox entry exists! Trying to execute now')
 
 
-//  const res = await childToParentMsg.execute(childProvider)
+ const res = await childToParentMsg.execute(childProvider)
 
-//   const rec = await res.wait()
-//   console.log('Done! Your transaction is executed', rec)
+  const rec = await res.wait()
+  console.log('Done! Your transaction is executed', rec)
 
 };
 

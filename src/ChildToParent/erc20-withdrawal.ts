@@ -7,7 +7,8 @@ import {
 } from "@arbitrum/sdk";
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
-import { alephZeroTest as childNetwork} from "../helpers/custom-network-aleph-test";
+import { alephZero as childNetwork} from "../helpers/custom-network-aleph";
+import { parseEther } from "ethers/lib/utils";
 
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
@@ -23,8 +24,7 @@ const walletPrivateKey: string = process.env.DEVNET_PRIVKEY as string;
 const parentProvider = new ethers.providers.JsonRpcProvider(process.env.ParentRPC);
 
 const childProvider = new ethers.providers.JsonRpcProvider(process.env.ChildRPC);
-const parentWallet = new Wallet(walletPrivateKey, parentProvider);
- const childWallet = new Wallet(walletPrivateKey, childProvider);
+const childWallet = new Wallet(walletPrivateKey, childProvider);
 
 const main = async () => {
 
@@ -40,8 +40,7 @@ const main = async () => {
   console.log("Erc20 Bridger Set Up");
 
   // We get the address of Parent Gateway for our DappToken
-  const parentErc20Address = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; //"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" //"0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; // "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"// "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"; //
-  //0x18d25B4e18165c97e1285212e5d1f80eDD6d3Aa7
+  const parentErc20Address = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"; // USDC token on Ethereum
   // Validate that the token address is correctly set
   if (!parentErc20Address) {
     throw new Error("Invalid ERC20 token address.");
@@ -88,7 +87,7 @@ const main = async () => {
   const initialBridgeTokenBalance = await erc20Contract.balanceOf(
     childWallet.address
   );
-  const tokenAmount = BigNumber.from(100)
+  const tokenAmount = parseEther("100")
   const childGateway = await erc20Bridger.getChildGatewayAddress(
     parentErc20Address,
     childProvider

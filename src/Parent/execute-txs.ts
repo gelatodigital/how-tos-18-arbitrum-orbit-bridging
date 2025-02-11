@@ -55,10 +55,10 @@ const main = async () => {
  console.log('Outbox entry exists! Trying to execute now')
 
 
-//  const res = await childToParentMsg.execute(childProvider)
+ const res = await childToParentMsg.execute(childProvider)
 
-//   const rec = await res.wait()
-//   console.log('Done! Your transaction is executed', rec)
+  const rec = await res.wait()
+  console.log('Done! Your transaction is executed', rec)
 
 };
 

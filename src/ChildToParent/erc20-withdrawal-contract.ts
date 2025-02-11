@@ -43,7 +43,7 @@ const main = async () => {
   }
   console.log("Parent ERC20 Address Validated");
 
-  const standardERCABI = ["function outboundTransfer( address _token,address _to, uint256 _amount, uint256 _maxGas,  bytes calldata _data) external payable returns (bytes memory)"]
+  const standardERCABI = ["function outboundTransfer( address _token,address _to, uint256 _amount, uint256 _maxGas,   uint256 _gasPriceBid, bytes calldata _data) external payable returns (bytes memory)"]
 
 
   // Define the ERC20 contract interface

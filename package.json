@@ -7,6 +7,7 @@
     "child:manual-redeem": "ts-node src/Child/manual-redeem.ts",
     "childToParent:sendTx": "ts-node src/ChildToParent/sendChildToParent.ts",
     "childToParent:withdraw:erc20": "ts-node src/ChildToParent/erc20-withdrawal.ts",
+    "childToParent:withdraw:erc20:contract": "ts-node src/ChildToParent/erc20-withdrawal-contract.ts",
     "childToParent:withdraw:native": "ts-node src/ChildToParent/native-withdrawal.ts",
     "parent:withdraw:execution": "ts-node src/Parent/execute-txs.ts",
     "parentToChild:cgt:deposit:native": "ts-node src/ParentToChild/cgt:orbit-chain/native-deposit.ts",

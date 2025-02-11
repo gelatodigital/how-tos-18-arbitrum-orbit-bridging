@@ -54,11 +54,11 @@ const main = async () => {
     "function decimals() view returns (uint8)",
      "function approve(address spender, uint256 value) public returns (bool)"
   ];
-
-
-  
-
-
+  const tokenAmount = BigNumber.from(1000)
+  let abiRouter = ["function outboundTransfer(address,address,uint256,bytes)"]
+  let iface = new ethers.utils.Interface(abiRouter);
+  let callData = iface.encodeFunctionData('outboundTransfer',[parentErc20Address,childWallet.address,tokenAmount,"0x"])
+  console.log(callData)
   // Get the expected Parent Gateway address
   const expectedParentGatewayAddress = await erc20Bridger.getParentGatewayAddress(
     parentErc20Address,
@@ -87,11 +87,13 @@ const main = async () => {
   const initialBridgeTokenBalance = await erc20Contract.balanceOf(
     childWallet.address
   );
-  const tokenAmount = parseEther("100")
+ 
   const childGateway = await erc20Bridger.getChildGatewayAddress(
     parentErc20Address,
     childProvider
   )
+console.log(childGateway) // 0x2A5a79061b723BBF453ef7E07c583C750AFb9BD6 // parent 0xccaF21F002EAF230c9Fa810B34837a3739B70F7B
+
 
   let tx = await erc20Contract.approve(childGateway, tokenAmount)
   await tx.wait()

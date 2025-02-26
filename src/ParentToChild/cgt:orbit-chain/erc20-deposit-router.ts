@@ -8,7 +8,7 @@ import {
 
 import dotenv from "dotenv";
 
-import {alephZeroTest as childNetwork} from "../../helpers/custom-network-aleph-test"
+import {alephZeroTest as childNetwork} from "../../helpers/custom-network-aleph-testnet"
 dotenv.config();
 
 

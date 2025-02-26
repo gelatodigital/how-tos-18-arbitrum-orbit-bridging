@@ -7,7 +7,7 @@ import {
 } from "@arbitrum/sdk";
 
 import dotenv from "dotenv";
-import {alephZero as childNetwork} from "../helpers/custom-network-aleph"; 
+import {realNetwork as childNetwork} from "../helpers/custom-network-real"; 
 
 
 dotenv.config();
@@ -30,7 +30,7 @@ const main = async () => {
   // register - needed for retryables
   registerCustomArbitrumNetwork(childNetwork);
 
-  let txnHash= "0x97e774ec21f1296d603fe1e9ee4eedcfe5299c43eefa93ca5159930a04da7ed2"//"0xfd1e52e5db6b0227e9c0efa74dc5f7af3cf35061a199488187deae5bf4d6642d"//"0x0f8cc7933d6943db34427c82a406ee009fe41078daa46aef1c95bda861331308"//"0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
+  let txnHash= "0xeaca390f4e27ee0c0208742e15aec533162ce38d29ffa6898e508cccb0107db7"//"0xfd1e52e5db6b0227e9c0efa74dc5f7af3cf35061a199488187deae5bf4d6642d"//"0x0f8cc7933d6943db34427c82a406ee009fe41078daa46aef1c95bda861331308"//"0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
 
 
   const receipt = await childProvider.getTransactionReceipt(txnHash)

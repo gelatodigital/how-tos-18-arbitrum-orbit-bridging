@@ -9,7 +9,7 @@ registerCustomArbitrumNetwork,
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
 
-import { alephZero as childNetwork} from "../../helpers/custom-network-aleph";
+import { eventumTestnetNetwork as childNetwork} from "../../helpers/custom-network-eventum-testnet";
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
 
@@ -40,7 +40,7 @@ const main = async () => {
   console.log("Erc20 Bridger Set Up");
 
   // We get the address of Parent Gateway for USDC on  Sepolia
-  const parentErc20Address = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"; 
+  const parentErc20Address = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"//"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"; 
 
   // Validate that the token address is correctly set
   if (!parentErc20Address) {

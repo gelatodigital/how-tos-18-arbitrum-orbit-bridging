@@ -94,24 +94,17 @@ const main = async () => {
   });
   const approveRec = await approveTx.wait();
  
-  const cgt = new ethers.Contract(
-    childNetwork.nativeToken!,
-    ERC20_ABI,
-    parentWallet
+ 
+
+    // Native TOKEN
+  const approveTx2 = await erc20Bridger.approveToken({
+    parentSigner: parentWallet,
+    erc20ParentAddress: childNetwork.nativeToken!
+  });
+  const approveRec2 = await approveTx2.wait();
+  console.log(
+    `You successfully allowed the Arbitrum Bridge to spend ${approveRec2.transactionHash}`
   );
-
-  let apYx =await cgt.approve("0x6ade2ed963c15c9117ee0d663d4b3af2ded7f660","ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
- await apYx.wait()
-
-    /// Native TOKEN
-  // const approveTx2 = await erc20Bridger.approveToken({
-  //   parentSigner: parentWallet,
-  //   erc20ParentAddress: childNetwork.nativeToken!
-  // });
-  // const approveRec2 = await approveTx2.wait();
-  // console.log(
-  //   `You successfully allowed the Arbitrum Bridge to spend ${approveRec2.transactionHash}`
-  // );
 
   const depositRequest = (await erc20Bridger.getDepositRequest({
     amount: tokenAmount,

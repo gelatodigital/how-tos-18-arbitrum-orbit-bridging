@@ -7,7 +7,7 @@ import {
 } from "@arbitrum/sdk";
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
-import { alephZero as childNetwork} from "../helpers/custom-network-aleph";
+import { eduTestnetNetwork as childNetwork} from "../helpers/custom-network-edu-testnet";
 import { parseEther } from "ethers/lib/utils";
 
 dotenv.config();

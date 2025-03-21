@@ -13,7 +13,7 @@ export const eduTestnetNetwork: ArbitrumNetwork ={
 
   "tokenBridge": {
       "parentCustomGateway": "",
-      "parentErc20Gateway": "0x0000000000000000000000000000000000000000",
+      "parentErc20Gateway": "0xd16E8b904BE8Db6FaB0C375c4eeA5BCDC6dcAa91",
       "parentGatewayRouter": "0x962170D0A0D123061D8A8D344eEB5664aa62C407",
       "parentMultiCall": "",
       "parentProxyAdmin": "",

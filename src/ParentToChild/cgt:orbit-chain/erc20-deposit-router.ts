@@ -1,15 +1,32 @@
-import { BigNumber, Contract, Wallet, ethers } from "ethers";
+import { BigNumber, Contract, Wallet, ethers, utils } from "ethers";
 import { Provider } from "@ethersproject/abstract-provider";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import {
   registerCustomArbitrumNetwork,
-  Erc20Bridger
+  Erc20Bridger,
+  ParentToChildMessageGasEstimator
 } from "@arbitrum/sdk";
 
 import dotenv from "dotenv";
 
-import {alephZeroTest as childNetwork} from "../../helpers/custom-network-aleph-testnet"
+import {eduTestnetNetwork as childNetwork} from "../../helpers/custom-network-edu-testnet"
+import { getBaseFee } from "../../helpers/helpter";
 dotenv.config();
+
+const encodeTokenInitData = (
+  name: string,
+  symbol: string,
+  decimals: number | string
+) => {
+  return utils.defaultAbiCoder.encode(
+    ['bytes', 'bytes', 'bytes'],
+    [
+      utils.defaultAbiCoder.encode(['string'], [name]),
+      utils.defaultAbiCoder.encode(['string'], [symbol]),
+      utils.defaultAbiCoder.encode(['uint8'], [decimals]),
+    ]
+  )
+}
 
 
 /**
@@ -19,7 +36,7 @@ const walletPrivateKey: string = process.env.DEVNET_PRIVKEY as string;
 let parentProvider = new ethers.providers.JsonRpcProvider(process.env.ParentRPC);
 const childProvider = new ethers.providers.JsonRpcProvider(process.env.ChildRPC);
 const parentWallet = new Wallet(walletPrivateKey, parentProvider);
-
+const childWallet = new Wallet(walletPrivateKey, childProvider);
 const main = async () => {
   console.log("Child Network Reached");
 
@@ -29,8 +46,9 @@ const main = async () => {
   console.log("Custom Network Added");
 
   // Set up the Erc20Bridger
-  const parentErc20Address = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; 
-  const tokenAmount = BigNumber.from(10000);
+  const parentErc20Address = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"; 
+  const gaslessBridgerAddress = "0xF38482d4b360B730F1407a12bdB27e7812a5a450"
+  const tokenAmount = BigNumber.from(100);
 
   const erc20Bridger = new Erc20Bridger(childNetwork);
 
@@ -49,14 +67,11 @@ const main = async () => {
   const ERC20_ABI = [
     "function balanceOf(address owner) view returns (uint256)",
     "function decimals() view returns (uint8)",
+    "function approve(address,uint256) external" 
   ];
 
-  //Get the ERC20 contract instance
-  const erc20Contract = new ethers.Contract(
-    parentErc20Address,
-    ERC20_ABI,
-    parentWallet
-  );
+
+
 
   // Get the expected Parent Gateway address
   const expectedParentGatewayAddress = await erc20Bridger.getParentGatewayAddress(
@@ -73,6 +88,15 @@ const main = async () => {
   if (!expectedParentGatewayAddress || expectedParentGatewayAddress === "") {
     throw new Error("Failed to get Parent Gateway address.");
   }
+    //Get the ERC20 contract instance
+    const erc20Contract = new ethers.Contract(
+      parentErc20Address,
+      ERC20_ABI,
+      parentWallet
+    );
+    let tx1 = await erc20Contract.approve(gaslessBridgerAddress,tokenAmount)
+    await tx1.wait();
+
 
   // Get the initial token balance of the Bridge
   const initialBridgeTokenBalance = await erc20Contract.balanceOf(
@@ -94,7 +118,7 @@ const main = async () => {
   });
   const approveRec = await approveTx.wait();
  
- 
+
 
     // Native TOKEN
   const approveTx2 = await erc20Bridger.approveToken({
@@ -106,19 +130,64 @@ const main = async () => {
     `You successfully allowed the Arbitrum Bridge to spend ${approveRec2.transactionHash}`
   );
 
-  const depositRequest = (await erc20Bridger.getDepositRequest({
-    amount: tokenAmount,
-    erc20ParentAddress: parentErc20Address,
-    parentProvider: parentProvider,
-    from: parentWallet.address,
-    childProvider: childProvider,
-  })) as any;
+  /////// ESTIMATING GAS
+   const parentToChildMessageGasEstimate = new ParentToChildMessageGasEstimator(childProvider);
 
-  let retryableData = depositRequest.retryableData;
-  let childGaslimit = retryableData.gasLimit;
-  let maxFeePerGas = retryableData.maxFeePerGas;
-  let maxSubmissionCost = retryableData.maxSubmissionCost;
-  let deposit = depositRequest.retryableData.deposit;
+    const l2gateway = "0x2a5302C754f0DcDe224Cd26F887b9B976CBeD972"
+    const deployData = encodeTokenInitData("USDC", "USDC", 6)
+    const dataEst = utils.defaultAbiCoder.encode(
+      ['bytes', 'bytes'],
+      [deployData, '0x']
+    )
+const abiL2 = ["function finalizeInboundTransfer(address _token,address _from,address _to, uint256 _amount,bytes calldata _data)"]
+  const iface = new utils.Interface(abiL2);
+  const calldata = iface.encodeFunctionData("finalizeInboundTransfer",[parentErc20Address,childWallet.address,childWallet.address,1000,dataEst]);
+  const RetryablesGasOverrides = {
+    gasLimit: {
+      base: undefined, // when undefined, the value will be estimated from rpc
+      min: BigNumber.from(10000), // set a minimum gas limit, using 10000 as an example
+      percentIncrease: BigNumber.from(30), // how much to increase the base for buffer
+    },
+    maxSubmissionFee: {
+      base: undefined,
+      percentIncrease: BigNumber.from(30),
+    },
+    maxFeePerGas: {
+      base: undefined,
+      percentIncrease: BigNumber.from(30),
+    },
+  };
+
+  const ParentToChildMessageGasParams = await parentToChildMessageGasEstimate.estimateAll(
+    {
+      from: "0xd16E8b904BE8Db6FaB0C375c4eeA5BCDC6dcAa91",
+      to:  l2gateway,
+      l2CallValue: BigNumber.from(0),
+      excessFeeRefundAddress: await childWallet.address,
+      callValueRefundAddress: await childWallet.address,
+      data: calldata,
+    },
+    await getBaseFee(parentProvider),
+    parentProvider,
+    RetryablesGasOverrides //if provided, it will override the estimated values. Note that providing "RetryablesGasOverrides" is totally optional.
+  );
+
+
+  // const depositRequest = (await erc20Bridger.getDepositRequest({
+  //   amount: tokenAmount,
+  //   erc20ParentAddress: parentErc20Address,
+  //   parentProvider: parentProvider,
+  //   from: gaslessBridgerAddress,
+  //   childProvider: childProvider,
+  // })) as any;
+
+  // console.log(depositRequest)
+
+  //let retryableData = ParentToChildMessageGasParams.retryableData;
+  let childGaslimit = ParentToChildMessageGasParams.gasLimit;
+  let maxFeePerGas = ParentToChildMessageGasParams.maxFeePerGas;
+  let maxSubmissionCost = ParentToChildMessageGasParams.maxSubmissionCost;
+  let deposit = ParentToChildMessageGasParams.deposit;
   console.log("Deposit/gas on l2:  ", deposit.toString())
 
 

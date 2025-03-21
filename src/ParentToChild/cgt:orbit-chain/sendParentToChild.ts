@@ -6,11 +6,25 @@ import {
   ParentToChildMessageGasEstimator
 } from "@arbitrum/sdk";
 import dotenv from "dotenv";
-import { blueberryNetwork as  childNetwork } from "../../helpers/custom-network";
+import { eduTestnetNetwork as  childNetwork } from "../../helpers/custom-network-edu-testnet";
 import { getBaseFee } from "../../helpers/helpter";
 
 dotenv.config();
 
+const encodeTokenInitData = (
+  name: string,
+  symbol: string,
+  decimals: number | string
+) => {
+  return utils.defaultAbiCoder.encode(
+    ['bytes', 'bytes', 'bytes'],
+    [
+      utils.defaultAbiCoder.encode(['string'], [name]),
+      utils.defaultAbiCoder.encode(['string'], [symbol]),
+      utils.defaultAbiCoder.encode(['uint8'], [decimals]),
+    ]
+  )
+}
 
 console.log("Environment Variables Loaded");
 
@@ -36,8 +50,18 @@ const main = async () => {
 
   const counter = "0xEEeBe2F778AA186e88dCf2FEb8f8231565769C27";
   const abi = ["function increment()"];
-  const iface = new utils.Interface(abi);
-  const calldata = iface.encodeFunctionData("increment");
+
+  const parentErc20Address = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"
+  const l2gateway = "0x2a5302C754f0DcDe224Cd26F887b9B976CBeD972"
+  const deployData = encodeTokenInitData("USDC", "USDC", 6)
+  const data1 = utils.defaultAbiCoder.encode(
+    ['bytes', 'bytes'],
+    [deployData, '0x']
+  )
+
+  const abiL2 = ["function finalizeInboundTransfer(address _token,address _from,address _to, uint256 _amount,bytes calldata _data)"]
+  const iface = new utils.Interface(abiL2);
+  const calldata = iface.encodeFunctionData("finalizeInboundTransfer",[parentErc20Address,childWallet.address,childWallet.address,1000,data1]);
   const RetryablesGasOverrides = {
     gasLimit: {
       base: undefined, // when undefined, the value will be estimated from rpc
@@ -56,8 +80,8 @@ const main = async () => {
 
   const ParentToChildMessageGasParams = await parentToChildMessageGasEstimate.estimateAll(
     {
-      from: await parentWallet.address,
-      to: await counter,
+      from: "0xd16E8b904BE8Db6FaB0C375c4eeA5BCDC6dcAa91",
+      to:  l2gateway,
       l2CallValue: BigNumber.from(0),
       excessFeeRefundAddress: await childWallet.address,
       callValueRefundAddress: await childWallet.address,
@@ -111,3 +135,4 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+

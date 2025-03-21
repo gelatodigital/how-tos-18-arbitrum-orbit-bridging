@@ -9,7 +9,7 @@ registerCustomArbitrumNetwork,
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
 
-import { eventumTestnetNetwork as childNetwork} from "../../helpers/custom-network-eventum-testnet";
+import { eventumTestnetNetwork as childNetwork} from "../../helpers/custom-network-eventum-testnet"
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
 
@@ -40,7 +40,7 @@ const main = async () => {
   console.log("Erc20 Bridger Set Up");
 
   // We get the address of Parent Gateway for USDC on  Sepolia
-  const parentErc20Address = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"//"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"; 
+  const parentErc20Address = "0x39a18914c79ec77db7d17b0ab0f2a750d794b128"//"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"; 
 
   // Validate that the token address is correctly set
   if (!parentErc20Address) {
@@ -64,6 +64,7 @@ const main = async () => {
   );
 
   let ParentBalance = await erc20Contract.balanceOf(parentWallet.address)
+
   console.log('Current Balance on Parent: ', ParentBalance.toString())
   // Get the expected Parent Gateway address
   const expectedParentGatewayAddress = await erc20Bridger.getParentGatewayAddress(
@@ -88,7 +89,7 @@ const main = async () => {
     `Initial Bridge Token Balance: ${initialBridgeTokenBalance.toString()}`
   );
 
-  const tokenAmount = BigNumber.from(50000)
+  const tokenAmount = BigNumber.from(1000)
 
   const approveTxGas = await erc20Bridger.approveToken({
     parentSigner: parentWallet,

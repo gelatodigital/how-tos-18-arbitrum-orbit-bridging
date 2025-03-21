@@ -28,7 +28,7 @@ export const eventumTestnetNetwork: ArbitrumNetwork ={
       "childWethGateway": ""
   },
   "isCustom": true,
-  "name": "Fluence Testnet",
+  "name": "Evedex Testnett",
   "retryableLifetimeSeconds": 604800,
   "parentChainId": 421614,
   "isTestnet": true,

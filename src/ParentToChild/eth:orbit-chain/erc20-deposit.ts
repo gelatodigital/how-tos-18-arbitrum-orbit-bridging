@@ -44,7 +44,7 @@ const main = async () => {
   console.log("Erc20 Bridger Set Up");
 
   // We get the address of Parent Gateway for USDC on Sepolia
-  const parentErc20Address = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d" //"0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; 
+  const parentErc20Address ="0x39a18914C79eC77DB7d17B0AB0F2a750D794b128"//  "0x39a18914c79ec77db7d17b0ab0f2a750d794b128"//"0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d" //"0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; 
 
   // Validate that the token address is correctly set
   if (!parentErc20Address) {

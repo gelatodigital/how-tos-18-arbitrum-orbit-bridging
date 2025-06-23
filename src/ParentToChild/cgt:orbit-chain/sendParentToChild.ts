@@ -80,7 +80,7 @@ const main = async () => {
 
   const ParentToChildMessageGasParams = await parentToChildMessageGasEstimate.estimateAll(
     {
-      from: "0xd16E8b904BE8Db6FaB0C375c4eeA5BCDC6dcAa91",
+      from: childNetwork.tokenBridge?.parentErc20Gateway as string,
       to:  l2gateway,
       l2CallValue: BigNumber.from(0),
       excessFeeRefundAddress: await childWallet.address,

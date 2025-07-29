@@ -7,7 +7,7 @@ import {
 } from "@arbitrum/sdk";
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
-import { blueberryNetwork as childNetwork} from "../../helpers/custom-network"; 
+import { FreeqTestnetNetwork as childNetwork} from "../../helpers/custom-network-freeq-testnet"; 
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
 

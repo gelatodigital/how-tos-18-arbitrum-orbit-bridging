@@ -7,7 +7,7 @@ import {
 } from "@arbitrum/sdk";
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
-import { citronusCitroNetwork as childNetwork} from "../../helpers/custom-network-citronus-citro"; 
+import { FreeqTestnetNetwork as childNetwork} from "../../helpers/custom-network-freeq-testnet"; 
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
 

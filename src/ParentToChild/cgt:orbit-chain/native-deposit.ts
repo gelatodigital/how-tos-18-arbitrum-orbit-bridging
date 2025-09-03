@@ -7,7 +7,7 @@ import {
 } from "@arbitrum/sdk";
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
-import { FreeqTestnetNetwork as childNetwork} from "../../helpers/custom-network-freeq-testnet"; 
+import { synfuturesTestnetNetwork as childNetwork} from "../../helpers/custom-network-synfutures-testnet"; 
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
 
@@ -27,7 +27,7 @@ const main = async () => {
   // register - needed for retryables
   registerCustomArbitrumNetwork(childNetwork);
 
-  const ethToChildDepositAmount = utils.parseEther("0.001");
+  const ethToChildDepositAmount = utils.parseEther("10088.999");
   console.log("Eth deposit amount is:", ethToChildDepositAmount.toString());
 
   // Set up the Erc20Bridger

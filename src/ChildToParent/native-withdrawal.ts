@@ -6,7 +6,7 @@ import {
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
 import { parseEther } from "ethers/lib/utils";
-import { blueberryNetwork as childNetwork } from "../helpers/custom-network";
+import { synfuturesTestnetNetwork as childNetwork } from "../helpers/custom-network-synfutures-testnet";
 
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);

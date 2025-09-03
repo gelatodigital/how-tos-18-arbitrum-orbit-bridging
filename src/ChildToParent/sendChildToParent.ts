@@ -4,7 +4,7 @@ import { EthBridger, registerCustomArbitrumNetwork } from "@arbitrum/sdk";
 import dotenv from "dotenv";
 
 import { ARB_SYS_ADDRESS } from "@arbitrum/sdk/dist/lib/dataEntities/constants";
-import { blueberryNetwork as childNetwork} from "../helpers/custom-network"; 
+import { synfuturesTestnetNetwork as childNetwork} from "../helpers/custom-network-synfutures-testnet"; 
 dotenv.config();
 
 console.log("Environment Variables Loaded");

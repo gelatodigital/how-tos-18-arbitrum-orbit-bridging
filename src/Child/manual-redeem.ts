@@ -12,7 +12,7 @@ import {
 } from "@arbitrum/sdk";
 import dotenv from "dotenv";
 
-import { blueberryNetwork as childNetwork} from "../helpers/custom-network"; 
+import { synfuturesTestnetNetwork as childNetwork} from "../helpers/custom-network-synfutures-testnet"; 
 
 dotenv.config();
 

@@ -9,7 +9,7 @@ import {
 
 import dotenv from "dotenv";
 
-import {eduTestnetNetwork as childNetwork} from "../../helpers/custom-network-edu-testnet"
+import { synfuturesTestnetNetwork as childNetwork} from "../../helpers/custom-network-synfutures-testnet"
 import { getBaseFee } from "../../helpers/helpter";
 dotenv.config();
 

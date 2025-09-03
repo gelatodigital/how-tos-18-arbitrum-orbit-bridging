@@ -9,7 +9,7 @@ registerCustomArbitrumNetwork,
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
 
-import { eventumTestnetNetwork as childNetwork} from "../../helpers/custom-network-eventum-testnet"
+import { synfuturesTestnetNetwork as childNetwork} from "../../helpers/custom-network-synfutures-testnet"
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
 

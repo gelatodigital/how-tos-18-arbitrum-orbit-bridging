@@ -7,8 +7,7 @@ import {
 } from "@arbitrum/sdk";
 
 import dotenv from "dotenv";
-import { synfuturesTestnetNetwork as childNetwork} from "../helpers/custom-network-synfutures-testnet"; 
-
+import { alephZero as childNetwork} from "../helpers/custom-network-aleph"
 
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
@@ -30,7 +29,7 @@ const main = async () => {
   // register - needed for retryables
   registerCustomArbitrumNetwork(childNetwork);
 
-  let txnHash= "0x79ba09472af303bdb9f5f618775ee2f265e91d6e6b806c2810df7b5a60778e42"//"0xfd1e52e5db6b0227e9c0efa74dc5f7af3cf35061a199488187deae5bf4d6642d"//"0x0f8cc7933d6943db34427c82a406ee009fe41078daa46aef1c95bda861331308"//"0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
+  let txnHash= "0xda7db26589b3abdceb6a6c72c2777bccfe9446134d4ba867e681201e9ef0e14a"//"0xfd1e52e5db6b0227e9c0efa74dc5f7af3cf35061a199488187deae5bf4d6642d"//"0x0f8cc7933d6943db34427c82a406ee009fe41078daa46aef1c95bda861331308"//"0x86cc4b3157dd5fba34dd8f50008f18b9ba54b432cc002797a724cb42dcfaac49" 
 
 
   const receipt = await childProvider.getTransactionReceipt(txnHash)
@@ -55,10 +54,10 @@ const main = async () => {
  console.log('Outbox entry exists! Trying to execute now')
 
 
- const res = await childToParentMsg.execute(childProvider)
+//  const res = await childToParentMsg.execute(childProvider)
 
-  const rec = await res.wait()
-  console.log('Done! Your transaction is executed', rec)
+//   const rec = await res.wait()
+//   console.log('Done! Your transaction is executed', rec)
 
 };
 

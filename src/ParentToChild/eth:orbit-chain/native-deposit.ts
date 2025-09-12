@@ -7,7 +7,7 @@ import {
 
 } from "@arbitrum/sdk";
 import dotenv from "dotenv";
-import { reyaNetwork as  childNetwork } from "../../helpers/custom-network-reya";
+import { marooTestnetNetwork as  childNetwork } from "../../helpers/custom-network-maroo-testnet";
 
 dotenv.config();
 
@@ -33,7 +33,7 @@ const main = async () => {
   console.log()
   // register - needed for retryables
   registerCustomArbitrumNetwork(childNetwork)
-  const ethToChildDepositAmount = utils.parseEther("0.001");
+  const ethToChildDepositAmount = utils.parseEther("0.1");
   console.log("Eth deposit amount is:", ethToChildDepositAmount.toString());
 
   // Set up the Erc20Bridger

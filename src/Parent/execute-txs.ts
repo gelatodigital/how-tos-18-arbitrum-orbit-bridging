@@ -7,7 +7,7 @@ import {
 } from "@arbitrum/sdk";
 
 import dotenv from "dotenv";
-import { fluenceNetwork as childNetwork} from "../helpers/custom-network-fluence";
+import { marooNetwork as childNetwork} from "../helpers/custom-network-maroo";
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
 
@@ -28,7 +28,7 @@ const main = async () => {
   // register - needed for retryables
   registerCustomArbitrumNetwork(childNetwork);
 
-  let txnHash= "0xce35fc3c3c78c95d807cc4bf45fa491e67778bd59cc4fc5227b0d5793e552054"
+  let txnHash= "0x096974ab168e878bac784b87872c412ea4cdb3bf92dc34f2c4fc8f6a64acb562"
 
 
   const receipt = await childProvider.getTransactionReceipt(txnHash)

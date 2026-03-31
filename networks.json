@@ -1,0 +1,82 @@
+{
+  "networks": [
+    {
+      "name": "Aleph Zero EVM testnet",
+      "chainId": 2039,
+      "type": "testnet",
+      "rpc": "https://rpc.alephzero-testnet.gelato.digital"
+    },
+    {
+      "name": "Blueberry",
+      "chainId": 88153591557,
+      "type": "testnet",
+      "rpc": "https://rpc.arb-blueberry-testnet.gelato.digital"
+    },
+    {
+      "name": "EDU Chain Testnet",
+      "chainId": 656476,
+      "type": "testnet",
+      "rpc": "https://rpc.open-campus-codex.gelato.digital"
+    },
+    {
+      "name": "Evedex Testnet",
+      "chainId": 16182,
+      "type": "testnet",
+      "rpc": "https://rpc.eventum-testnet.gelato.digital"
+    },
+    {
+      "name": "Eventum",
+      "chainId": 161803,
+      "type": "mainnet",
+      "rpc": "https://rpc.eventum.gelato.digital"
+    },
+    {
+      "name": "Fluence Staging",
+      "chainId": 123420000220,
+      "type": "testnet",
+      "rpc": "https://rpc.fluence-staging.gelato.digital"
+    },
+    {
+      "name": "Fluence Testnet",
+      "chainId": 52164803,
+      "type": "testnet",
+      "rpc": "https://rpc.fluence-testnet.gelato.digital"
+    },
+    {
+      "name": "Fluence",
+      "chainId": 9999999,
+      "type": "mainnet",
+      "rpc": "https://rpc.mainnet.fluence.dev"
+    },
+    {
+      "name": "Maroo Testnet",
+      "chainId": 250815,
+      "type": "testnet",
+      "rpc": "https://rpc.maroo-testnet.gelato.digital"
+    },
+    {
+      "name": "Novastro Testnet",
+      "chainId": 560098,
+      "type": "testnet",
+      "rpc": "https://rpc.novastro-testnet.gelato.digital"
+    },
+    {
+      "name": "Reya Cronos",
+      "chainId": 89346162,
+      "type": "testnet",
+      "rpc": "https://rpc.reya-cronos.gelato.digital"
+    },
+    {
+      "name": "Dkargo",
+      "chainId": 61022894,
+      "type": "mainnet",
+      "rpc": "https://rpc.dkargo.gelato.digital"
+    },
+    {
+      "name": "Maroo",
+      "chainId": 815,
+      "type": "mainnet",
+      "rpc": "https://rpc.maroo.gelato.digital"
+    }
+  ]
+}

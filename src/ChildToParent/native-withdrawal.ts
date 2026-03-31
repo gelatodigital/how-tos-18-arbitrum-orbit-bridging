@@ -6,7 +6,7 @@ import {
 //import { arbLog, requireEnvVariables } from "arb-shared-dependencies";
 import dotenv from "dotenv";
 import { parseEther } from "ethers/lib/utils";
-import { synfuturesTestnetNetwork as childNetwork } from "../helpers/custom-network-synfutures-testnet";
+import { marooNetwork as childNetwork } from "../helpers/custom-network-maroo"
 
 dotenv.config();
 //requireEnvVariables(["DEVNET_PRIVKEY", "ParentRPC", "ChildRPC", "TOKEN_ADDRESS"]);
